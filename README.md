@@ -1,4 +1,4 @@
-Usage instructions:
+# Usage instructions
 
 Intro to getting Sophos API key:
 https://developer.sophos.com/intro
@@ -11,7 +11,7 @@ The Forensic key will work for most things, but not everything. Specifically Cas
 For reference:
 https://docs.sophos.com/central/customer/help/en-us/ManageYourProducts/GlobalSettings/APICredentials/index.html 
 
-INSTALL:
+# Installation
 This has been tested on Windows 10 and 11, outside of those environments you’re on your own, mostly, as I have limited capacity to test it there. 
 Put the three files with this cmdlet into the WindowsPowerShell folder of your user account from which you will run PowerShell: 
 
@@ -30,14 +30,13 @@ From a PowerShell command line run:
 
 I know reading documentation is dull, but it explains most things somewhat well and has several examples on how to use it. Keep in mind they’re very simple examples and aren’t really to show case the full extent of what can be done. 
 
-DESIGN DECISIONS:
+# DESIGN DECISIONS
     - All queries are manual queries. You can use saved queries, but because it's across multiple subestates with possibly mismatched query IDs it pulls the SQL from 1 estate and runs it across all of them specified. 
     - Default MaxWaitTime is 60 seconds. It can be modified using -MaxWaitTime switch. 
     - DPAPI via Get-Credential and Export-CliXML used to handle at-rest crypto of API keys. Best easy option in PowerShell that doesn't rely on non-core functionality. 
     - API token passed around as a variable for now instead of env var, to leave scope to have it done as an array that allow different keys for different estates. Right now it needs an org/partner level key
     - Default APICallDelay is 1 second
 
-########################
 # Log 
 
 Debug/Issues:
