@@ -46,43 +46,19 @@ Debug/Issues:
 TODO
 Invoke-Sophos: 
 - Two DeleteEndpoints, one for from CSV and one from command line
-- Get API endpoints progrmatically
-- Pull it from the whoami/tenant data and save in an enviornment variable
-- User output during runs
-- Mimic what you've done originally and output that you're calling subestates etc for XDR/LD/Detections
-- Retry:
-Could do with being specific ordinal rather than -Last, change value to being an indice
-- GT 90 days:
-Do a 'from' that if someone puts 'Full' or 'all' will searching the previous 90 days and aggregate data into a single result. 
-- Alternative to this is that it could subdivide the query into 30 day chunks and do searches based on that. <= 90 days, gives warning it may take a while
-- paramset handling:
-Put in handling for searchField and search switches only working in LR and not XDR (parameter set)
-Try and group the sections together by Parameter set, so one section that does the full flow of LiveDiscover, another for XDR, etc rather than the phases broken up
-- Exprt GetQueryRunStatus:
-Add in GetQueryRunStatus switch that takes an ID and lets you check the status of a query run
-Ideally this functionality could also be acheived using the PreviousSearches switch where we specify how far back we wish to go and does actions such as get status or as is the case now the results
-Possibly this could be an array rather than a count? E.g 1..5 would get the previous 5 results from the ta
-- Group in searchFields
-GET /endpoint-groups from -getendpoint to allow use of group in searchfields 
-- code flow (paramset and switch)
-Use parameterSet variable in a switch to fully control which sections of code execute. Put things like To/From before that, and output functionality after
-- Incomplete search handling:
-For when queries don't have adequate time to run and are unfinished that should be super clear to the user, includes XDR, Detection and Cases. LiveDiscover is a given
-- Additionally, add in WaitTime to those so that the user can manually control that if needed
-- Variable display in ListQueries
-Fix the variable display int he ListQueries so it does 'name: x type : y description: z | name: x type : y description: z' etc
-- Variable tidier:
-See how much of the variable tidier is still needed when we're converting things to JSON
-- PowerShell standards:
-Rename all functions to be inline with powershell standards
-- DisplayDebugMessaging
-Stick more of the verbose text under verbose - though be cautious about stuff that constitutes errors or warnings, e.g. empty results 
-This would let me be more detailed in what it's doing ...
-- Saved queries 
-Could have it use the queryId to run queries, but it would need to check that the template was the same in all subestates and perhaps throw an error if it wasn't? Though the user might want it that way
-Hard to say ... if they're using an actual queryId then it can be presumed they want that Id run, so do that. Run it in whichever subestate that queryId exists?
-- WaitTimes
-Implement a backoff algorithm for this as well?
+- User output during runs ( just missing 'getting result'
+- Retry: Could do with being specific ordinal rather than -Last, change value to being an indice
+- GT 90 days: Do a 'from' that if someone puts 'Full' or 'all' will searching the previous 90 days and aggregate data into a single result. 
+- paramset handling: not sure how 
+- Exprt GetQueryRunStatus: Add in GetQueryRunStatus switch that takes an ID and lets you check the status of a query run. Ideally this functionality could also be acheived using the PreviousSearches switch where we specify how far back we wish to go and does actions such as get status or as is the case now the results
+- XDR, add in endpoint ID option via endpoint lookup. Mind 1k limit (segmented searches or hard limit?)
+- code flow (paramset and switch) Use parameterSet variable in a switch to fully control which sections of code execute. Put things like To/From before that, and output functionality after
+- Incomplete search handling: For when queries don't have adequate time to run and are unfinished that should be super clear to the user, includes XDR, Detection and Cases. LiveDiscover is a given
+- Variable display in ListQueries: Fix the variable display int he ListQueries so it does 'name: x type : y description: z | name: x type : y description: z' etc
+- Variable tidier: See how much of the variable tidier is still needed when we're converting things to JSON
+- DisplayDebugMessaging: Stick more of the verbose text under verbose - though be cautious about stuff that constitutes errors or warnings, e.g. empty results. This would let me be more detailed in what it's doing ...
+- Saved queries: Could have it use the queryId to run queries, but it would need to check that the template was the same in all subestates and perhaps throw an error if it wasn't? Though the user might want it that way Hard to say ... if they're using an actual queryId then it can be presumed they want that Id run, so do that. Run it in whichever subestate that queryId exists?
+- WaitTimes: Implement a backoff algorithm for this as well?
 
 
 
