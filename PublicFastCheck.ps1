@@ -33,11 +33,12 @@ select * from xdr_data where query_name in
 )
 "@
 
+$timePeriod = "-P$($days)D"
 
 Write-Host "[*] XDR Known Threats" -ForegroundColor Red
 $output = Invoke-Sophos `
     -ManualQuery $query `
-    -from "-P$($days)D" `
+    -from $timePeriod `
     -Format Console `
     -MaxWaitTime 60 `
     -XDR -TagSubestate
