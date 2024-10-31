@@ -1,4 +1,4 @@
-﻿function Invoke-Sophos {
+function Invoke-Sophos {
 
     <#
         .SYNOPSIS
@@ -1509,12 +1509,16 @@ Enter (1, 2, 3 or 4)"
                 [array]$previousResultObject = Get-SophosQueriesRun -first $PreviousSearches -bearer_token $token -subestate $estate.subestateId
             } 
 
-            $previousResultObject | %{
-                Add-Member -InputObject $_ -MemberType NoteProperty -Name SubestateId -Value $estate.subestateId
-                Add-Member -InputObject $_ -MemberType NoteProperty -Name SubestateName -Value $estate.subestateName
+            if ($previousResultObject) {
+                $previousResultObject | %{
+                    Add-Member -InputObject $_ -MemberType NoteProperty -Name SubestateId -Value $estate.subestateId
+                    Add-Member -InputObject $_ -MemberType NoteProperty -Name SubestateName -Value $estate.subestateName
+                }
+
+                $allPreviousSearchMetaDataObject += $previousResultObject
             }
 
-            $allPreviousSearchMetaDataObject += $previousResultObject
+            
 
         }
 
