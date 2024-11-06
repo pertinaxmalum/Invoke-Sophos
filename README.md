@@ -45,6 +45,8 @@ Debug/Issues:
     
 TODO
 Invoke-Sophos: 
+- MaxWaitTime - include a max option that will wait until the query is done one way or another.
+- Test-SophosRunCompletion - do a backoff algorithm for the wait?
 - Two DeleteEndpoints, one for from CSV and one from command line
 - User output during runs ( just missing 'getting result'
 - Retry: Could do with being specific ordinal rather than -Last, change value to being an indice
