@@ -15,7 +15,7 @@ https://docs.sophos.com/central/customer/help/en-us/ManageYourProducts/GlobalSet
 This has been tested on Windows 10 and 11, outside of those environments you’re on your own, mostly, as I have limited capacity to test it there. 
 Put the three files with this cmdlet into the WindowsPowerShell folder of your user account from which you will run PowerShell: 
 
-  C:\Users\{{useraccount}}\Documents\WindowsPowerShell\Modules\Invoke-Sophos
+  C:\Users\\{{useraccount}}\Documents\WindowsPowerShell\Modules\Invoke-Sophos
 
 You will likely have to create some of those folders as part of this process. 
 Once you’ve done that and you have your client ID and client secret handy, open a new PowerShell window and run the following command:
