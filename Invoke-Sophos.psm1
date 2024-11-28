@@ -368,6 +368,9 @@ function Invoke-Sophos {
         [Parameter(Mandatory = $false, Position = 0)]
         [Array] $Subestate = '.',
 
+        [Parameter(Mandatory = $false, Position = 0)]
+        [Array] $SubestateId,
+
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Detections")]
         [switch] $Detections,
 
@@ -584,6 +587,30 @@ function Invoke-Sophos {
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
         [ValidateSet("assignee:asc","assignee:desc","createdAfter:asc","createdAfter:desc","createdBefore:asc","createdBefore:desc","escalated:asc","escalated:desc","managedBy:asc","managedBy:desc","name:asc","name:desc","overviewContains:asc","overviewContains:desc","severity:asc","severity:desc","sort:asc","sort:desc","status:asc","status:desc","type:asc","type:desc","verdict:asc","verdict:desc", IgnoreCase = $true)]
         [String]$CaseSort,
+                
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [String]$CaseUpdateId,
+
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [String]$CaseUpdateAssignee,
+                
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [String]$CaseUpdateName,
+                
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [String]$CaseUpdateOverview,
+        
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [ValidateSet("critical", "high", "medium", "low", "informational", IgnoreCase = $true)]
+        [String]$CaseUpdateSeverity,
+        
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [ValidateSet( "actionRequired", "resolved", "investigating", "new", "onHold", IgnoreCase = $true)]
+        [String]$CaseUpdateStatus,
+        
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
+        [ValidateSet("hunt", "investigation", "incident", "healthCheck", "duplicate", "postureImprovement", "customerRequest", "activeThreat", "exposure", "managedRisk", "generalRequest", IgnoreCase = $true)]
+        [String]$CaseUpdateType,
 
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "Cases")]
         [Hashtable] $GetCasesRaw,
@@ -863,8 +890,14 @@ Enter (1, 2, 3 or 4)"
 
         $subestateArrayForRequests = @()
 
-        foreach ($estateToRegex in $Subestate) {
-           $subestateArrayForRequests += $arrayTenantIdApiHostName | ?{$_.subestateName -match $estateToRegex}
+        if ($SubestateId.count -gt 0) {
+            foreach ($estateToRegexByOd in $SubestateId) {
+               $subestateArrayForRequests += $arrayTenantIdApiHostName | ?{$_.subestateId -match $estateToRegexById}
+            }
+        } else {
+            foreach ($estateToRegex in $Subestate) {
+               $subestateArrayForRequests += $arrayTenantIdApiHostName | ?{$_.subestateName -match $estateToRegex}
+            }
         }
 
         # Remove duplicates, mildly complicated by it being a PsCustomObject
@@ -958,10 +991,7 @@ Enter (1, 2, 3 or 4)"
     ####################
 
     if ($DeleteEndpoint) {
-
-    Write-Host "[!] Functionality Currently Disabled. Enable in code." -ForegroundColor Yellow
-
-    <#
+    
     if (!$SkipDeletionSafetyChecks) {
             $confirmationMessage = "You are about to carry out delete functionality. To confirm you wish to continue, type 'Delete' when asked."
             [System.Windows.Forms.MessageBox]::Show($confirmationMessage, "Warning", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning) > $null
@@ -1009,7 +1039,7 @@ Enter (1, 2, 3 or 4)"
                 }
             default {Write-Host "[!] No confirmation to delete. Aborting."; return }
         }
-    #>
+    
         return
         
     }
@@ -1137,6 +1167,27 @@ Enter (1, 2, 3 or 4)"
     #########
 
     if ($PSCmdlet.ParameterSetName -eq 'Cases') {
+
+        if ($CaseUpdateId) { 
+            
+            $caseUpdates = @()
+
+            foreach ($tenant in $subestateArrayForRequests){
+                $caseUpdates += `
+                    Update-SophosCase `
+                    -subestate $tenant `
+                    -token $token `
+                    -CaseId $CaseUpdateId `
+                    -UpdateCaseAssignee $CaseUpdateAssignee `
+                    -UpdateCaseName $CaseUpdateName `
+                    -UpdateCaseOverview $CaseUpdateOverview `
+                    -UpdateCaseSeverity $CaseUpdateSeverity `
+                    -UpdateCaseStatus $CaseUpdateStatus
+
+            }
+
+            return $caseUpdates
+        }
 
         if($CaseCreatedAfter) { $testDateResultAfter = Test-DateTime -timeToTest $CaseCreatedAfter} 
         if($CaseCreatedBefore) { $testDateResultBefore = Test-DateTime -timeToTest $CaseCreatedBefore} 
@@ -1854,4 +1905,5 @@ Enter (1, 2, 3 or 4)"
 
 
 } #end of function
+
 
