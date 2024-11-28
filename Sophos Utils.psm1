@@ -1,4 +1,4 @@
-﻿# Variables
+# Variables
 $authentication_uri = "https://id.sophos.com/api/v2/oauth2/token"
 $organisation_uri = "https://api.central.sophos.com/whoami/v1"
 $tenants_for_partners_uri = "https://api.central.sophos.com/partner/v1/tenants"
@@ -547,6 +547,28 @@ function Get-CaseDetectionsDetailsByDetectionId ($subestate_id, $token, $paramet
     return $response
 }
 
+function Update-SophosCase ($subestate, $token, $caseId, $UpdateCaseAssignee, $UpdateCaseName, $UpdateCaseOverview, $UpdateCaseSeverity, $UpdateCaseStatus, $UpdateCaseType) {
+    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+    $headers.Add("X-Tenant-ID", "$($subestate.subestateId)")
+    $headers.Add("Authorization", "Bearer $($token)")
+
+    $parameters = [pscustomobject]@{
+      assignee = $UpdateCaseAssignee
+      name = $UpdateCaseName
+      overview = $UpdateCaseOverview
+      severity = $UpdateCaseSeverity
+      status = $UpdateCaseStatus
+      type = $UpdateCaseType
+    }
+
+    $parametersToSend = Remove-NullObjectsFromPsCustomObject $parameters | ConvertTo-Json
+    
+    $response = Invoke-RestMethod "https://api-eu01.central.sophos.com/cases/v1/cases/$($caseId)" -Method Patch -Headers $headers -Body $parametersToSend
+
+    return $response
+
+}
+
 function Invoke-DetectionsPost ($token, $subestate_id, $detectionParameters) {
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("X-Tenant-ID", "$($subestate_id)")
@@ -628,9 +650,9 @@ function Remove-Endpoint ($token, $endpointsToDelete, $subestate_id) {
 
     $json_endpointsToDelete = $endpointsToDelete | ConvertTo-Json -Depth 2 
 
-    #$response = Invoke-RestMethod "https://api-eu01.central.sophos.com/endpoint/v1/endpoints/delete" -Method Post -Headers $headers -body $json_endpointsToDelete -ContentType "application/json"
+    $response = Invoke-RestMethod "https://api-eu01.central.sophos.com/endpoint/v1/endpoints/delete" -Method Post -Headers $headers -body $json_endpointsToDelete -ContentType "application/json"
 
-    $response = "This function is currently hard disabled. Modify code to enable."
+    #Write-Warning "This function is currently hard disabled. Modify code to enable. No endpoints were deleted."
 
     return $response
 }
