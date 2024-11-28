@@ -1,4 +1,4 @@
-﻿Import-Module "$PSScriptRoot\Sophos Utils.psm1" 
+Import-Module "$PSScriptRoot\Sophos Utils.psm1" 
 
 # Variables
 $authentication_uri = "https://id.sophos.com/api/v2/oauth2/token"
@@ -32,7 +32,7 @@ function New-Token ($clientId, $clientSecret) {
 
     }
 
-    $response = Invoke-RestMethod -uri $authentication_uri -Method 'POST' -Headers $headers -Body $body
+    $response = Invoke-RestMethod -uri "https://id.sophos.com/api/v2/oauth2/token" -Method 'POST' -Headers $headers -Body $body
 
     $token = $($response.access_token)
 
