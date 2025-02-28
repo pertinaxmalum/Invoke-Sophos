@@ -1639,7 +1639,7 @@ Enter (1, 2, 3 or 4)"
         if ($XDR) {
             $output = Get-XDRResults -query_id $GetResult -subestate_id $subestateArrayForRequests.subestateId -token $token -WaitTime $MaxWaitTime
         } else {
-            $output = Get-sophosResult -query_id $GetResult -subestate $subestateArrayForRequests.subestateId -bearer_token $token -WaitTime $MaxWaitTime
+            $output = Get-LiveDiscoverResult -query_id $GetResult -subestate $subestateArrayForRequests -bearer_token $token -WaitTime $MaxWaitTime
         }
 
         Out-SophosResult -format $Format -results $output -savepath $SavePath
